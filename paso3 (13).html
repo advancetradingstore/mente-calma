@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="es"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Sonidos binaurales, cimática y chakras · para escuchar con calma</title>
+<meta name="description" content="Generador binaural con auriculares, patrones cimáticos, los 7 chakras como tradición, respiración guiada y lecturas cortas. Contenido de relajación y experiencia sonora.">
+<meta property="og:title" content="Sonidos que se ven y se sienten">
+<meta property="og:description" content="Binaurales, cimática y chakras para escuchar con calma.">
+<meta property="og:type" content="website">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@1,400;1,500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"¿Necesito auriculares?","acceptedAnswer":{"@type":"Answer","text":"Sí. El efecto binaural requiere un tono distinto en cada oído; sin auriculares solo escucharás un sonido mezclado."}},
+{"@type":"Question","name":"¿Cuánto tiempo conviene escuchar?","acceptedAnswer":{"@type":"Answer","text":"Empezá con 5 a 10 minutos a volumen bajo y fijate cómo te sentís."}},
+{"@type":"Question","name":"¿Es un tratamiento?","acceptedAnswer":{"@type":"Answer","text":"No. Es contenido de relajación y experiencia sonora; no sustituye atención médica."}}]}</script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--bg:#04040a;--tx:#f4f4f0;--gr:#8a8a90;--c:#f4f4f0;--ln:rgba(244,244,240,.12);--e:cubic-bezier(.2,.7,.2,1)}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--tx);font:400 14px/1.75 'JetBrains Mono',ui-monospace,monospace;padding-bottom:calc(90px + env(safe-area-inset-bottom));overflow-x:hidden}
+h1,h2,h3,.ser{font-family:'Cormorant Garamond',Georgia,serif;font-style:italic;font-weight:400}
+h1{font-size:clamp(34px,8vw,58px);line-height:1.1;min-height:2.3em}
+h2{font-size:clamp(28px,6vw,40px);line-height:1.15;margin-bottom:12px}
+h3{font-size:24px}
+p,.g{color:var(--gr)}
+#bgc{position:fixed;inset:0;width:100%;height:100%;z-index:-1;opacity:.5}
+#prog{position:fixed;top:0;left:0;height:2px;width:100%;background:var(--tx);transform:scaleX(0);transform-origin:0 50%;z-index:60}
+header{position:fixed;top:0;left:0;right:0;z-index:50;display:flex;align-items:center;justify-content:space-between;gap:8px;padding:calc(8px + env(safe-area-inset-top)) 16px 8px;background:rgba(4,4,10,.8);backdrop-filter:blur(8px)}
+.logo{font-size:22px}
+section{max-width:720px;margin:0 auto;padding:72px 20px}
+.btn{min-height:44px;min-width:44px;padding:0 20px;border:1px solid var(--ln);background:transparent;color:var(--tx);font:inherit;border-radius:999px;cursor:pointer;position:relative;overflow:hidden;transition:transform .3s var(--e),border-color .3s,color .3s}
+.btn:hover{border-color:var(--tx)}
+.btn.on{border-color:var(--c);color:var(--c)}
+.rip{position:absolute;width:20px;height:20px;margin:-10px;border-radius:50%;background:rgba(244,244,240,.25);transform:scale(0);animation:rp .6s var(--e) forwards;pointer-events:none}
+@keyframes rp{to{transform:scale(14);opacity:0}}
+:focus-visible{outline:2px solid var(--tx);outline-offset:3px}
+.row{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0}
+canvas.cv{width:100%;max-width:360px;aspect-ratio:1;display:block;margin:20px auto}
+.hero{text-align:center;padding-top:96px;min-height:90vh}
+.stats{display:flex;justify-content:center;gap:28px;margin:22px 0}
+.stats b{font:400 30px 'Cormorant Garamond',Georgia,serif;font-style:italic;display:block;color:var(--tx)}
+.u{position:relative;display:inline-block}
+.u::after{content:"";position:absolute;left:0;right:0;bottom:-2px;height:1px;background:var(--tx);transform:scaleX(0);transform-origin:0 50%;transition:transform 1.2s var(--e) .4s}
+.in .u::after,.u.in::after{transform:scaleX(1)}
+.rv{opacity:0;transform:translateY(16px);transition:opacity .9s var(--e),transform .9s var(--e)}
+.rv.in{opacity:1;transform:none}
+.card{border:1px solid var(--ln);border-radius:14px;padding:20px;background:rgba(244,244,240,.02);transition:transform .3s var(--e)}
+.warn{border-left:2px solid var(--gr);padding:8px 14px;font-size:12px;color:var(--gr)}
+label{display:block;font-size:12px;color:var(--gr);margin-top:14px}
+input[type=range]{width:100%;height:44px;accent-color:var(--tx);background:transparent}
+.ring{width:96px;height:96px;transform:rotate(-90deg)}
+.ring circle{fill:none;stroke-width:2}
+#rg{stroke:var(--tx);stroke-dasharray:276.5;stroke-dashoffset:276.5;transition:stroke-dashoffset .3s linear}
+.big{min-height:56px;padding:0 32px;font-size:15px}
+.ad{display:flex;flex-direction:column;align-items:center;margin:32px auto;contain:layout size}
+.ad-300x250{width:300px;height:270px}.ad-320x50{width:320px;height:70px}
+.ad-l{height:20px;font-size:11px;line-height:20px;color:var(--gr)}
+.ad-b{border:1px solid var(--ln);border-radius:8px;display:flex;align-items:center;justify-content:center;color:var(--gr);font-size:11px;overflow:hidden}
+.ad-300x250 .ad-b{width:300px;height:250px;min-height:250px}.ad-320x50 .ad-b{width:320px;height:50px;min-height:50px}
+.ad-sticky{position:fixed;left:0;right:0;bottom:0;z-index:55;display:none;justify-content:center;background:rgba(4,4,10,.95);padding:2px 0 env(safe-area-inset-bottom)}
+.ad-sticky .ad{margin:0}
+.ad-sticky button{position:absolute;right:4px;top:0;width:44px;height:44px;background:none;border:0;color:var(--gr);font-size:22px;cursor:pointer}
+@media(max-width:767px){body.st .ad-sticky{display:flex}body.st{padding-bottom:calc(190px + env(safe-area-inset-bottom))}}
+.mini{position:fixed;left:50%;bottom:calc(12px + env(safe-area-inset-bottom));transform:translate(-50%,160%);z-index:54;display:flex;align-items:center;gap:12px;padding:6px 8px 6px 18px;border:1px solid var(--ln);border-radius:999px;background:rgba(4,4,10,.95);transition:transform .5s var(--e),bottom .3s}
+.mini.show{transform:translate(-50%,0)}
+body.st .mini{bottom:calc(84px + env(safe-area-inset-bottom))}
+.cards .card{margin-top:0}
+.art{margin-bottom:12px}
+.art button.t{all:unset;box-sizing:border-box;width:100%;min-height:44px;cursor:pointer;display:block}
+.art .pn{display:grid;grid-template-rows:0fr;transition:grid-template-rows .5s var(--e)}
+.art .pn>div{overflow:hidden}
+.art.open .pn{grid-template-rows:1fr}
+.art .pn p{padding-top:12px}
+.col{display:flex;flex-direction:column;gap:6px;align-items:flex-start}
+.node{display:flex;align-items:center;gap:14px;width:100%;min-height:48px;background:none;border:0;color:var(--gr);font:inherit;cursor:pointer;text-align:left}
+.node i{width:20px;height:20px;border-radius:50%;border:1px solid var(--gr);transition:transform .4s var(--e),background .4s,border-color .4s}
+.node.on{color:var(--tx)}.node.on i{background:var(--c);border-color:var(--c);transform:scale(1.35)}
+.bar{height:6px;border-radius:3px;background:var(--ln);overflow:hidden;margin:4px 0 10px}
+.bar i{display:block;height:100%;background:var(--tx);transform:scaleX(0);transform-origin:0 50%;transition:transform 1s var(--e)}
+#bc{width:180px;height:180px;border-radius:50%;border:1px solid var(--tx);margin:28px auto;display:flex;align-items:center;justify-content:center;transform:scale(.55);transition:transform 4s linear}
+.bdg{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px}
+.bdg span{padding:8px 14px;border:1px solid var(--ln);border-radius:999px;font-size:12px;opacity:.35;transition:opacity .8s var(--e),transform .8s var(--e)}
+.bdg span.ok{opacity:1;border-color:var(--tx)}.bdg span.pop{transform:scale(1.12)}
+.halo{position:fixed;left:0;top:0;width:36px;height:36px;margin:-18px;border:1px solid rgba(244,244,240,.35);border-radius:50%;pointer-events:none;z-index:70;transition:opacity .3s}
+footer{max-width:720px;margin:0 auto;padding:40px 20px;font-size:12px;color:var(--gr);border-top:1px solid var(--ln)}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;scroll-behavior:auto!important}.rv{opacity:1;transform:none}}
+</style></head><body>
+<canvas id="bgc" aria-hidden="true"></canvas><div id="prog"></div>
+<header><span class="logo ser">Aura</span><div class="row" style="margin:0"><button class="btn" id="lg" aria-label="Cambiar idioma / Switch language">EN</button><button class="btn" id="hs" data-i="nav"></button></div></header>
+<main>
+<section class="hero" id="top"><canvas class="cv" id="hc" role="img" aria-label="Patrón cimático animado"></canvas>
+<h1 id="ttl"></h1><p data-i="sub" class="rv"></p>
+<div class="stats rv"><div><b class="cnt" data-to="4">0</b><span class="g" data-i="s_a"></span></div><div><b class="cnt" data-to="7">0</b><span class="g" data-i="s_b"></span></div><div><b class="cnt" data-to="6">0</b><span class="g" data-i="s_c"></span></div></div>
+<button class="btn big" id="gate" data-i="gate"></button></section>
+<div class="ad ad-320x50" data-slot="B1"></div>
+
+<section id="gen"><h2 class="rv"><span class="u" data-i="genT"></span></h2>
+<p class="warn rv" data-i="genW"></p>
+<canvas class="cv" id="gc" role="img" aria-label="Visualizador cimático"></canvas>
+<div id="lib" style="display:grid;gap:12px;margin:18px 0"></div><div hidden><div class="row" id="sts" role="group"></div><div class="row" id="prs" role="group"></div>
+<label for="car"><span data-i="lc"></span>: <b id="vc">140</b> Hz</label><input type="range" id="car" min="100" max="250" value="140" aria-label="Portadora">
+<label for="bt"><span data-i="lb"></span>: <b id="vb">6</b> Hz</label><input type="range" id="bt" min="0.5" max="30" step="0.5" value="6" aria-label="Batido"></div>
+<label for="vl"><span data-i="lv"></span>: <b id="vv">30</b>%</label><input type="range" id="vl" min="0" max="100" value="30" aria-label="Volumen">
+<div class="row" style="align-items:center;margin-top:24px"><button class="btn big" id="pp" aria-pressed="false"></button>
+<svg class="ring" viewBox="0 0 96 96" aria-hidden="true"><circle cx="48" cy="48" r="44" stroke="rgba(244,244,240,.12)"/><circle id="rg" cx="48" cy="48" r="44"/></svg><span id="rt" class="g"></span></div>
+<div class="row" id="tms" role="group" aria-label="Temporizador"></div></section>
+<section id="fx"><h2 class="rv"><span class="u" data-i="fxT"></span></h2><div class="card" aria-live="polite"><div class="ser" id="fxn" style="font-size:44px"></div><p id="fxt" style="margin:8px 0 14px"></p><div class="row" style="align-items:center"><button class="btn" id="fxb"></button><span class="g" id="fxc"></span></div></div></section>
+<div class="ad ad-320x50" data-slot="B2"></div>
+
+<section id="lis"><h2 class="rv"><span class="u" data-i="lisT"></span></h2><p class="rv" data-i="lisD"></p><div id="sm" class="cards"></div>
+<div id="vt" hidden class="card" style="margin-top:20px"><h3 data-i="vote"></h3><div class="row" id="vb3"></div><div id="vr"></div></div></section>
+<div class="ad ad-300x250" data-slot="A1"></div>
+
+<section id="chk"><h2 class="rv"><span class="u" data-i="chT"></span></h2><p class="rv" data-i="chD"></p>
+<canvas class="cv" id="cc" role="img" aria-label="Patrón del chakra"></canvas>
+<div class="col" id="nodes"></div>
+<div class="card" id="ccard" style="margin:20px 0" aria-live="polite"><h3 id="cn"></h3><p class="ser" style="font-size:22px;color:var(--c)" id="cp"></p><p id="cd"></p></div>
+<button class="btn" id="all" data-i="all"></button></section>
+<div class="ad ad-300x250" data-slot="A2"></div>
+
+<section id="br" style="text-align:center"><h2 class="rv"><span class="u" data-i="brT"></span></h2><p data-i="brD"></p>
+<div id="bc" aria-hidden="true"><span id="bl" class="ser" style="font-size:24px"></span></div>
+<button class="btn" id="bb"></button></section>
+<div class="ad ad-320x50" data-slot="B3"></div>
+
+<section id="rd"><h2 class="rv"><span class="u" data-i="rdT"></span></h2><div id="arts"></div></section>
+<div class="ad ad-300x250" data-slot="A5"></div>
+
+<section id="qz"><h2 class="rv"><span class="u" data-i="qzT"></span></h2><div class="card" id="qb" aria-live="polite"></div></section>
+
+<section id="sk"><h2 class="rv"><span class="u" data-i="stT"></span></h2>
+<div class="stats" style="justify-content:flex-start"><div><b id="km">0</b><span class="g" data-i="mins"></span></div><div><b id="kd">0</b><span class="g" data-i="days"></span></div></div>
+<div class="bdg" id="bdg"></div></section>
+<div class="ad ad-300x250" data-slot="A6"></div>
+
+<section id="fq"><h2 class="rv"><span class="u" data-i="fqT"></span></h2><div id="fl"></div>
+<div style="text-align:center;margin-top:40px"><button class="btn big" id="cta" data-i="cta"></button></div></section>
+</main>
+<footer><p data-i="legal" style="color:var(--tx)"></p><p style="margin-top:10px">© Aura</p></footer>
+<div class="mini" id="mini"><span id="ms" class="g"></span><button class="btn" id="mp" aria-label="Pausa"></button></div>
+<div class="ad-sticky"><div class="ad ad-320x50" data-slot="B4"></div><button id="sx" aria-label="Cerrar publicidad">×</button></div>
+
+<script>
+(()=>{'use strict';
+const $=(s,r=document)=>r.querySelector(s),$$=(s,r=document)=>[...r.querySelectorAll(s)];
+const RM=matchMedia('(prefers-reduced-motion:reduce)').matches,FINE=matchMedia('(hover:hover) and (pointer:fine)').matches;
+const store={get(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
+const wait=ms=>new Promise(r=>setTimeout(r,ms));
+
+/* ===== PUBLICIDAD: único lugar de configuración. Pegá el código del anunciante en "code" ===== */
+const CODE_B=`<script>
+  atOptions = {
+    'key' : '7bd9585f46d69fcf9882268c5ce16649',
+    'format' : 'iframe',
+    'height' : 50,
+    'width' : 320,
+    'params' : {}
+  };
+<\/script>
+<script src="https://bicea.org/22/7bd9585f46d69fcf9882268c5ce16649"><\/script>`;
+const CODE_A=`<script>
+  atOptions = {
+    'key' : '5b12c194ffcbd3ad69811b0101fbb85a',
+    'format' : 'iframe',
+    'height' : 250,
+    'width' : 300,
+    'params' : {}
+  };
+<\/script>
+<script src="https://bicea.org/22/5b12c194ffcbd3ad69811b0101fbb85a"><\/script>`;
+const ADS=[
+{id:'B1',size:'320x50',code:CODE_B},{id:'B2',size:'320x50',code:CODE_B},{id:'B3',size:'320x50',code:CODE_B},{id:'B4',size:'320x50',code:CODE_B},
+{id:'A1',size:'300x250',code:CODE_A},{id:'A2',size:'300x250',code:CODE_A},{id:'A3',size:'300x250',code:CODE_A},
+{id:'A4',size:'300x250',code:CODE_A},{id:'A5',size:'300x250',code:CODE_A},{id:'A6',size:'300x250',code:CODE_A}];
+/* Los scripts usan la variable global atOptions: se montan de a uno (cola) para que no se pisen entre slots */
+let adQ=Promise.resolve();
+function runCode(box,code){return new Promise(done=>{const tp=document.createElement('template');tp.innerHTML=code;const ns=[...tp.content.childNodes];let i=0;
+ (function next(){if(i>=ns.length)return done();const n=ns[i++];if(n.nodeName!=='SCRIPT'){box.appendChild(n);return next()}
+  const s=document.createElement('script');[...n.attributes].forEach(a=>s.setAttribute(a.name,a.value));s.text=n.textContent;box.appendChild(s);
+  if(s.src){let ok=0;const go=()=>{if(!ok){ok=1;next()}};s.onload=s.onerror=go;setTimeout(go,4000)}else next()})()})}
+function mountAd(el){const c=ADS.find(a=>a.id===el.dataset.slot);if(!c||!c.code)return;
+ adQ=adQ.then(()=>{const b=$('.ad-b',el);b.textContent='';return runCode(b,c.code)}).catch(()=>{})}
+
+/* ===== TEXTOS ES/EN ===== */
+const T={es:{nav:'Empezar',title:'Sonidos que se ven y se sienten',sub:'Binaurales, cimática y chakras para escuchar con calma. Un ritual de pocos minutos.',s_a:'estados',s_b:'tonos',s_c:'lecturas',gate:'Ponete auriculares 🎧 · Empezar',ad:'Publicidad',
+genT:'Elegí tu sonido',fxT:'Datos que conviene saber',genW:'Solo funciona con auriculares. Empezá con volumen bajo. No lo uses mientras manejás.',
+st:['Delta 0,5–4 Hz','Theta 4–8','Alfa 8–12','Beta 13–30'],pr:['Dormir','Meditar','Calma','Foco'],lc:'Portadora',lb:'Batido',lv:'Volumen',play:'▶ Reproducir',pause:'❚❚ Pausa',min:'min',
+lisT:'Escuchá la diferencia',lisD:'Tres sonidos, tres sensaciones. Escuchá cada uno con auriculares.',sd:['Grave · theta','Medio · alfa','Agudo · etéreo'],hear:'Escuchar 15 s',vote:'¿Cuál sentiste más?',votes:'votos',
+chT:'Los 7 chakras',chD:'Tradición y creencia, no ciencia. Tocá un nodo para ver y escuchar su tono.',all:'Escuchar los 7 juntos',
+c:[['Raíz','Yo soy','Según la tradición, se ubica en la base de la columna y se asocia con la seguridad y el arraigo.'],['Sacro','Yo siento','Vinculado al agua, el placer y la creatividad. Un tono para sentir sin apuro.'],['Plexo solar','Yo hago','Asociado a la voluntad y la acción. Se lo imagina como un pequeño sol.'],['Corazón','Yo amo','Centro de la compasión y los vínculos, según la tradición.'],['Garganta','Yo hablo','Relacionado con la expresión y la escucha honesta.'],['Tercer ojo','Yo veo','Simboliza la intuición y la imaginación.'],['Corona','Yo comprendo','Se asocia con la quietud y la sensación de unidad.']],
+brT:'Respirá con nosotros',brD:'Inhalá 4 · sostené 4 · exhalá 6. Con un drone suave de fondo.',brS:'Empezar respiración',brX:'Detener',ph:['Inhalá','Sostené','Exhalá'],
+rdT:'Para leer',more:'Leer más',less:'Cerrar',
+a:[['Qué es un pulso binaural','Cuando un oído recibe 200 Hz y el otro 206 Hz, tu cerebro percibe un pulso lento de 6 Hz que no existe en el aire: se crea en tu percepción. Por eso hay que escucharlo con auriculares. La investigación sobre sus efectos es limitada y mixta; acá lo proponemos como una experiencia para escuchar con calma, sin promesas.'],
+['Qué es la cimática','Es el estudio de cómo el sonido dibuja formas en la materia. Si hacés vibrar una placa con arena, los granos se acumulan en las líneas que no se mueven, llamadas líneas nodales. Cambian con la frecuencia. Es una manera hermosa de ver qué hace una vibración.'],
+['Cómo usar auriculares','Usá auriculares estéreo, de cualquier tipo. Empezá con el volumen bajo: debería sentirse casi como un murmullo. Sentate o recostate en un lugar seguro, cerrá los ojos si querés y probá unos 10 minutos. Si algo te incomoda, pausá. Nunca lo uses manejando.'],
+['La tradición de los chakras','Los chakras vienen de tradiciones de la India, que los describen desde hace siglos como centros a lo largo de la columna. Cada uno se asocia con un color y una frase. Es un marco simbólico y cultural, no un hecho científico: tomalo como una invitación a la reflexión.'],
+['Hábitos de sueño y calma','Horarios regulares, luz tenue de noche, pantallas lejos de la cama y una rutina breve (respirar, estirarse, escuchar algo suave) suelen ayudar a bajar el ritmo. Los sonidos pueden ser parte de esa rutina, no un reemplazo. Si el insomnio persiste, consultá a un profesional.'],
+['Mitos y preguntas frecuentes','No curan enfermedades, no reprograman el cerebro ni reemplazan un tratamiento. Los efectos varían de persona a persona y mucha gente no siente nada especial. Lo que sí podés esperar: una pausa, un pequeño ritual y algo lindo para escuchar.']],
+qzT:'¿Qué sonido va con tu momento del día?',qzR:'Tu sonido sugerido:',qzO:'Abrir en el generador',qzA:'Repetir',
+qz:[['¿Qué momento del día es?',[['Noche','0'],['Mañana o trabajo','3'],['Tarde, pausa','2'],['Cualquiera','1']]],['¿Cómo está tu energía?',[['Agotada','0'],['Dispersa','3'],['Agitada','2'],['Tranquila','1']]],['¿Qué querés ahora?',[['Descansar','0'],['Concentrarme','3'],['Soltar tensión','2'],['Estar presente','1']]],['¿Cuánto tiempo tenés?',[['20 minutos','0'],['20 minutos','3'],['10 minutos','2'],['10 minutos','1']]]],
+stT:'Tu racha',mins:'minutos escuchados',days:'días de racha',b:['5 min','30 min','60 min','3 días','7 días'],
+fqT:'Preguntas frecuentes',f:[['¿Necesito auriculares?','Sí. El efecto binaural requiere un tono distinto en cada oído; sin auriculares solo escucharás un sonido mezclado.'],['¿Cuánto tiempo conviene escuchar?','Empezá con 5 a 10 minutos a volumen bajo y fijate cómo te sentís.'],['¿Es un tratamiento?','No. Es contenido de relajación y experiencia sonora; no sustituye atención médica.'],['¿Quién no debería usarlo?','No lo uses manejando ni operando maquinaria. Si tenés epilepsia fotosensible u otra condición, consultá antes con un profesional.']],
+cta:'Volver al generador',legal:'Contenido de relajación y experiencia sonora. No sustituye atención médica. No lo uses al conducir ni con epilepsia fotosensible sin consultar.',ad:'Publicidad',noaudio:'Tu navegador no pudo iniciar el audio.'},
+en:{nav:'Start',title:'Sounds you can see and feel',sub:'Binaural beats, cymatics and chakras to listen to calmly. A ritual of a few minutes.',s_a:'states',s_b:'tones',s_c:'reads',gate:'Put on headphones 🎧 · Start',ad:'Advertisement',
+genT:'Pick your sound',fxT:'Good to know',genW:'Works only with headphones. Start with low volume. Do not use while driving.',
+st:['Delta 0.5–4 Hz','Theta 4–8','Alpha 8–12','Beta 13–30'],pr:['Sleep','Meditate','Calm','Focus'],lc:'Carrier',lb:'Beat',lv:'Volume',play:'▶ Play',pause:'❚❚ Pause',min:'min',
+lisT:'Hear the difference',lisD:'Three sounds, three sensations. Listen to each with headphones.',sd:['Low · theta','Mid · alpha','High · ethereal'],hear:'Listen 15 s',vote:'Which one did you feel most?',votes:'votes',
+chT:'The 7 chakras',chD:'Tradition and belief, not science. Tap a node to see and hear its tone.',all:'Hear all 7 together',
+c:[['Root','I am','In tradition, it sits at the base of the spine and is tied to safety and grounding.'],['Sacral','I feel','Linked to water, pleasure and creativity. A tone for feeling without rush.'],['Solar plexus','I do','Associated with will and action. Imagined as a small sun.'],['Heart','I love','Center of compassion and bonds, according to tradition.'],['Throat','I speak','Related to expression and honest listening.'],['Third eye','I see','Symbolizes intuition and imagination.'],['Crown','I understand','Associated with stillness and a sense of unity.']],
+brT:'Breathe with us',brD:'Inhale 4 · hold 4 · exhale 6. With a soft drone in the background.',brS:'Start breathing',brX:'Stop',ph:['Inhale','Hold','Exhale'],
+rdT:'To read',more:'Read more',less:'Close',
+a:[['What is a binaural beat','When one ear receives 200 Hz and the other 206 Hz, your brain perceives a slow 6 Hz pulse that does not exist in the air: it is created in your perception. That is why you need headphones. Research on its effects is limited and mixed; here it is offered as an experience to listen to calmly, with no promises.'],
+['What is cymatics','It is the study of how sound draws shapes in matter. If you vibrate a plate with sand, the grains gather on the lines that do not move, called nodal lines. They change with frequency. It is a beautiful way to see what a vibration does.'],
+['How to use headphones','Use stereo headphones of any kind. Start with low volume: it should feel almost like a murmur. Sit or lie down somewhere safe, close your eyes if you like and try about 10 minutes. If anything feels uncomfortable, pause. Never use it while driving.'],
+['The chakra tradition','Chakras come from Indian traditions that have described them for centuries as centers along the spine. Each is tied to a color and a phrase. It is a symbolic and cultural framework, not a scientific fact: take it as an invitation to reflect.'],
+['Sleep and calm habits','Regular schedules, dim light at night, screens away from bed and a short routine (breathing, stretching, listening to something soft) usually help slow down. Sounds can be part of that routine, not a replacement. If insomnia persists, see a professional.'],
+['Myths and FAQ','They do not cure diseases, rewire the brain or replace treatment. Effects vary and many people feel nothing special. What you can expect: a pause, a small ritual and something nice to listen to.']],
+qzT:'Which sound fits your moment of the day?',qzR:'Suggested sound:',qzO:'Open in generator',qzA:'Retry',
+qz:[['What time of day is it?',[['Night','0'],['Morning or work','3'],['Afternoon break','2'],['Any time','1']]],['How is your energy?',[['Exhausted','0'],['Scattered','3'],['Restless','2'],['Calm','1']]],['What do you want now?',[['Rest','0'],['Concentrate','3'],['Release tension','2'],['Be present','1']]],['How much time do you have?',[['20 minutes','0'],['20 minutes','3'],['10 minutes','2'],['10 minutes','1']]]],
+stT:'Your streak',mins:'minutes listened',days:'day streak',b:['5 min','30 min','60 min','3 days','7 days'],
+fqT:'FAQ',f:[['Do I need headphones?','Yes. The binaural effect needs a different tone in each ear; without headphones you only hear a mixed sound.'],['How long should I listen?','Start with 5 to 10 minutes at low volume and notice how you feel.'],['Is it a treatment?','No. It is relaxation content and a sound experience; it does not replace medical care.'],['Who should not use it?','Do not use it while driving or operating machinery. If you have photosensitive epilepsy or another condition, ask a professional first.']],
+cta:'Back to the generator',legal:'Relaxation content and sound experience. Not a substitute for medical care. Do not use while driving or with photosensitive epilepsy without consulting.',noaudio:'Your browser could not start audio.'}};
+let lang=store.get('lang',(navigator.language||'es').startsWith('en')?'en':'es');
+const t=k=>T[lang][k];
+
+/* ===== CIMÁTICA ===== */
+class Cym{constructor(c,o={}){this.c=c;this.x=c.getContext('2d');Object.assign(this,{m:4,k:4,col:'#f4f4f0',n:1300,bf:.1,amp:.03},o);this.t=0;this.s=1;
+ this.p=Array.from({length:this.n},()=>{const a=Math.random()*6.283,r=Math.sqrt(Math.random());return[Math.cos(a)*r,Math.sin(a)*r]});
+ this.rs();for(let i=0;i<70;i++)this.step();this.draw();Cym.all.push(this);new IntersectionObserver(e=>this.vis=e[0].isIntersecting).observe(c);this.vis=true;addEventListener('resize',()=>{this.rs();this.draw()})}
+rs(){const d=Math.min(devicePixelRatio||1,2),w=this.c.clientWidth||300;this.c.width=this.c.height=Math.round(w*d);this.d=d}
+f(x,y){const r=Math.hypot(x,y)/this.s;return Math.cos(this.m*Math.atan2(y,x))*Math.sin(this.k*Math.PI*r)}
+step(){this.s=1+this.amp*Math.sin(this.t*6.283*this.bf);const e=.008;
+ for(const q of this.p){const v=this.f(q[0],q[1]),fx=(this.f(q[0]+e,q[1])-this.f(q[0]-e,q[1]))/(2*e),fy=(this.f(q[0],q[1]+e)-this.f(q[0],q[1]-e))/(2*e),g=fx*fx+fy*fy+.05;
+ let dx=-v*fx/g*.3,dy=-v*fy/g*.3;const m=Math.hypot(dx,dy);if(m>.04){dx*=.04/m;dy*=.04/m}
+ q[0]+=dx+(Math.random()-.5)*.01;q[1]+=dy+(Math.random()-.5)*.01;
+ if(q[0]*q[0]+q[1]*q[1]>1){const a=Math.random()*6.283,r=Math.sqrt(Math.random());q[0]=Math.cos(a)*r;q[1]=Math.sin(a)*r}}}
+draw(){const W=this.c.width,d=this.d,x=this.x;x.clearRect(0,0,W,W);x.fillStyle=this.col;x.globalAlpha=.75;
+ for(const q of this.p)x.fillRect((q[0]*this.s+1)/2*W,(q[1]*this.s+1)/2*W,d*1.3,d*1.3);x.globalAlpha=1}
+set(o){Object.assign(this,o);for(let i=0;i<70;i++)this.step();this.draw()}}
+Cym.all=[];
+let last=0;function loop(ts){const dt=Math.min((ts-last)/1000||.016,.05);last=ts;
+ if(!document.hidden&&!RM)for(const c of Cym.all)if(c.vis){c.t+=dt;c.step();c.draw()}
+ drift(dt);requestAnimationFrame(loop)}
+
+/* estrellas de fondo */
+const bg=$('#bgc'),bx=bg.getContext('2d'),stars=Array.from({length:50},()=>({x:Math.random(),y:Math.random(),r:Math.random()*1.2+.3,v:Math.random()*.004+.001}));
+function bgr(){bg.width=innerWidth;bg.height=innerHeight}bgr();addEventListener('resize',bgr);
+function drift(dt){if(document.hidden)return;bx.clearRect(0,0,bg.width,bg.height);bx.fillStyle='#f4f4f0';
+ for(const s of stars){if(!RM){s.y-=s.v*dt*10;if(s.y<0)s.y=1}bx.globalAlpha=.25;bx.beginPath();bx.arc(s.x*bg.width,s.y*bg.height,s.r,0,6.283);bx.fill()}bx.globalAlpha=1}
+
+/* ===== AUDIO ===== */
+const A={x:null,g:null,on:false,cap:.22,nodes:[]};
+function actx(){if(!A.x){const C=window.AudioContext||window.webkitAudioContext;if(!C)throw new Error('noaudio');A.x=new C();A.g=A.x.createGain();A.g.gain.value=0;A.g.connect(A.x.destination)}if(A.x.state==='suspended')A.x.resume();return A.x}
+function osc(f,pan,dest,type='sine'){const x=A.x,o=x.createOscillator();o.type=type;o.frequency.value=f;
+ if(x.createStereoPanner){const p=x.createStereoPanner();p.pan.value=pan;o.connect(p);p.connect(dest)}else o.connect(dest);o.start();return o}
+function tone(fs,d=2,g=.1){try{const x=actx(),o=x.createGain(),n=x.currentTime;o.gain.setValueAtTime(0,n);o.gain.linearRampToValueAtTime(g/fs.length,n+.1);o.gain.exponentialRampToValueAtTime(.0001,n+d);o.connect(x.destination);
+ fs.forEach(f=>{const s=osc(f,0,o);s.stop(n+d+.1)})}catch(e){}}
+function pair(f,b,d){try{gStop();const x=actx(),o=x.createGain(),n=x.currentTime;o.gain.setValueAtTime(0,n);o.gain.linearRampToValueAtTime(.1,n+1);o.gain.setValueAtTime(.1,n+d-1);o.gain.linearRampToValueAtTime(0,n+d);o.connect(x.destination);
+ [osc(f,-1,o),osc(f+b,1,o)].forEach(s=>s.stop(n+d+.1))}catch(e){}}
+const G={car:140,beat:6,vol:.3,end:0,tmin:10,o:[]};
+const ST=[[.5,4,2],[4,8,6],[8,12,10],[13,30,18]],PR=[[0,100,2,20],[1,140,6,10],[2,180,10,10],[3,220,18,20]],CY=[[3,3],[4,5],[5,6],[6,8]];
+const gc=new Cym($('#gc'),{m:4,k:5,bf:.1,amp:.03});
+function stIdx(b){return b<4?0:b<8?1:b<13?2:3}
+function gStart(){try{const x=actx();if(G.o.length)return;const n=x.currentTime;
+ G.o=[osc(G.car,-1,A.g),osc(G.car+G.beat,1,A.g)];A.g.gain.cancelScheduledValues(n);A.g.gain.setValueAtTime(A.g.gain.value,n);A.g.gain.linearRampToValueAtTime(G.vol*A.cap,n+1);
+ A.on=true;G.end=Date.now()+G.tmin*6e4;upd()}catch(e){alert(t('noaudio'))}}
+function gStop(){if(!G.o.length)return;const x=A.x,n=x.currentTime,o=G.o;G.o=[];A.on=false;A.g.gain.cancelScheduledValues(n);A.g.gain.setValueAtTime(A.g.gain.value,n);A.g.gain.linearRampToValueAtTime(0,n+1);setTimeout(()=>o.forEach(s=>{try{s.stop()}catch(e){}}),1100);upd()}
+function freq(){if(G.o.length){const n=A.x.currentTime;G.o[0].frequency.setTargetAtTime(G.car,n,.05);G.o[1].frequency.setTargetAtTime(G.car+G.beat,n,.05)}
+ const i=stIdx(G.beat);gc.set({m:CY[i][0],k:CY[i][1]});gc.bf=Math.min(G.beat,3);gc.amp=.03;$$('#sts .btn').forEach((b,j)=>b.classList.toggle('on',j===i))}
+function upd(){libMark();const p=$('#pp');p.textContent=A.on?t('pause'):t('play');p.setAttribute('aria-pressed',A.on);$('#mp').textContent=A.on?'❚❚':'▶';
+ $('#mp').setAttribute('aria-label',A.on?t('pause'):t('play'));$('#ms').textContent=t('st')[stIdx(G.beat)].split(' ')[0];mini()}
+let genVis=true;new IntersectionObserver(e=>{genVis=e[0].isIntersecting;mini()}).observe($('#gen'));
+function mini(){$('#mini').classList.toggle('show',(A.on||bOn)&&!genVis)}
+function setPreset(i){curP=i;const p=PR[i];G.car=p[1];G.beat=p[2];G.tmin=p[3];$('#car').value=G.car;$('#bt').value=G.beat;sync();freq();tms()}
+function sync(){$('#vc').textContent=G.car;$('#vb').textContent=G.beat;$('#vv').textContent=Math.round(G.vol*100)}
+$('#car').oninput=e=>{G.car=+e.target.value;sync();freq()};
+$('#bt').oninput=e=>{G.beat=+e.target.value;sync();freq()};
+$('#vl').oninput=e=>{G.vol=+e.target.value/100;sync();if(A.on)A.g.gain.setTargetAtTime(G.vol*A.cap,A.x.currentTime,.1)};
+const tog=()=>A.on?gStop():gStart();$('#pp').onclick=tog;$('#mp').onclick=()=>{if(bOn)bStop();else tog()};
+function tms(){const r=$('#tms');r.innerHTML='';[5,10,20].forEach(m=>{const b=document.createElement('button');b.className='btn'+(G.tmin===m?' on':'');b.textContent=m+' '+t('min');b.onclick=()=>{G.tmin=m;if(A.on)G.end=Date.now()+m*6e4;tms()};r.appendChild(b)})}
+setInterval(()=>{if(!A.on){$('#rg').style.strokeDashoffset=276.5;$('#rt').textContent='';return}
+ const left=Math.max(0,G.end-Date.now());$('#rg').style.strokeDashoffset=276.5*(1-left/(G.tmin*6e4));$('#rt').textContent=Math.floor(left/6e4)+':'+String(Math.floor(left/1e3)%60).padStart(2,'0');if(left<=0)gStop()},500);
+
+/* estados y presets */
+const LIB={es:[['Dormir','Tonos graves y lentos para bajar el ritmo antes de acostarte.','Noche · 20 min'],['Meditar','Un pulso lento para sentarte, respirar y soltar la mente.','Pausa · 10 min'],['Calma','Para cortar con el estrés del día y volver al cuerpo.','Tarde · 10 min'],['Foco','Un ritmo más activo para estudiar o trabajar sin distraerte.','Trabajo · 20 min']],
+en:[['Sleep','Low, slow tones to wind down before bed.','Night · 20 min'],['Meditate','A slow pulse to sit, breathe and let the mind settle.','Pause · 10 min'],['Calm','To cut the stress of the day and come back to your body.','Afternoon · 10 min'],['Focus','A more active rhythm to study or work without distraction.','Work · 20 min']]};
+const FX={es:[['1787','Ernst Chladni mostró figuras de arena sobre placas que vibran: así nació la cimática.'],['30 Hz','Es, más o menos, la diferencia máxima entre oídos para percibir un pulso binaural.'],['< 1000 Hz','Por debajo de unos 1000 Hz es donde mejor se perciben los pulsos binaurales.'],['6 resp/min','Respirar lento, unas 6 veces por minuto, es una práctica muy estudiada para relajarse.'],['7 h o más','Es lo que recomiendan las guías de sueño para adultos. Los sonidos ayudan a la rutina, no la reemplazan.'],['0 curas','Los binaurales no tratan enfermedades: la evidencia sobre sus efectos es limitada y mixta.']],
+en:[['1787','Ernst Chladni showed sand patterns on vibrating plates: that is how cymatics began.'],['30 Hz','Roughly the largest difference between ears at which a binaural beat is perceived.'],['< 1000 Hz','Binaural beats are best perceived with tones below about 1000 Hz.'],['6 breaths/min','Slow breathing, about 6 times a minute, is a well-studied relaxation practice.'],['7 h or more','Sleep guidelines recommend this for adults. Sounds help the routine, they do not replace it.'],['0 cures','Binaural beats do not treat illness: the evidence on their effects is limited and mixed.']]};
+let curP=-1,fi=0;
+function libMark(){$$('#lib .btn').forEach((b,j)=>{const on=A.on&&j===curP;b.classList.toggle('on',on);b.textContent=on?t('pause'):t('play')})}
+function buildLib(){const l=$('#lib');l.innerHTML='';LIB[lang].forEach((c,i)=>{const d=document.createElement('div');d.className='card tilt';d.innerHTML='<h3></h3><p style="margin:4px 0"></p><span class="g" style="font-size:12px"></span><br><button class="btn" style="margin-top:12px;width:100%"></button>';
+ $('h3',d).textContent=c[0];$('p',d).textContent=c[1];$('span',d).textContent=c[2];$('button',d).onclick=()=>{if(A.on&&curP===i){gStop();return}setPreset(i);if(A.on)G.end=Date.now()+G.tmin*6e4;else gStart();libMark()};l.appendChild(d)});libMark()}
+function fx(){const f=FX[lang][fi];$('#fxn').textContent=f[0];$('#fxt').textContent=f[1];$('#fxc').textContent=(fi+1)+'/'+FX[lang].length;$('#fxb').textContent=lang==='es'?'Otro dato →':'Another fact →'}
+$('#fxb').onclick=()=>{fi=(fi+1)%FX.es.length;fx()};
+function buildGen(){buildLib();$('#sts').innerHTML='';t('st').forEach((s,i)=>{const b=document.createElement('button');b.className='btn';b.textContent=s;b.onclick=()=>{G.beat=ST[i][2];$('#bt').value=G.beat;sync();freq()};$('#sts').appendChild(b)});
+ $('#prs').innerHTML='';t('pr').forEach((s,i)=>{const b=document.createElement('button');b.className='btn';b.textContent='✦ '+s;b.onclick=()=>setPreset(i);$('#prs').appendChild(b)})}
+
+/* ===== ESCUCHÁ LA DIFERENCIA ===== */
+const SD=[[120,6,3,3],[200,10,5,5],[432,3,7,9]];let VT=store.get('vt',{c:[0,0,0],me:-1});
+SD.forEach((s,i)=>{const d=document.createElement('div');d.className='card rv tilt';d.style.marginBottom='12px';d.innerHTML='<canvas class="cv" style="max-width:180px;margin:0 auto 10px" aria-hidden="true"></canvas><h3></h3><button class="btn" style="margin-top:10px"></button>';$('#sm').appendChild(d);
+ const cy=new Cym($('canvas',d),{m:s[2],k:s[3],n:900,bf:.1});d.querySelector('button').onclick=()=>{pair(s[0],s[1],15);cy.set({amp:.03});$('#vt').hidden=false;setTimeout(()=>$('#vt').scrollIntoView({block:'center'}),15500)}});
+function votes(){$('#vb3').innerHTML='';[1,2,3].forEach((n,i)=>{const b=document.createElement('button');b.className='btn'+(VT.me===i?' on':'');b.textContent=n;b.onclick=()=>{if(VT.me>=0)return;VT.me=i;VT.c[i]++;store.set('vt',VT);votes()};$('#vb3').appendChild(b)});
+ const tot=VT.c.reduce((a,b)=>a+b,0)||1;$('#vr').innerHTML=VT.me<0?'':VT.c.map((v,i)=>'<div class="g">'+(i+1)+' · '+v+' '+t('votes')+'</div><div class="bar"><i style="transform:scaleX('+v/tot+')"></i></div>').join('')}
+
+/* ===== CHAKRAS ===== */
+const CF=[396,417,528,639,741,852,963],CC=['#e53935','#ff7a1a','#ffd21f','#2ecc71','#2f9bff','#5b4bff','#b266ff'];
+const cc=new Cym($('#cc'),{m:3,k:3,n:1100,bf:.1});let cur=0,busy=false;
+function pick(i,snd=true){cur=i;const c=T[lang].c[i];$('#chk').style.setProperty('--c',CC[i]);cc.set({m:i+2,k:i+3,col:CC[i]});
+ $$('.node').forEach((n,j)=>{n.classList.toggle('on',j===i);n.setAttribute('aria-pressed',j===i)});$('#cn').textContent=c[0]+' · '+CF[i]+' Hz';$('#cp').textContent=c[1];$('#cd').textContent=c[2];if(snd)tone([CF[i]],2.2)}
+for(let i=6;i>=0;i--){const b=document.createElement('button');b.className='node';b.innerHTML='<i></i><span></span>';b.onclick=()=>pick(i);$('#nodes').appendChild(b)}
+$('#all').onclick=async()=>{if(busy)return;busy=true;gStop();for(let i=0;i<7;i++){pick(i);await wait(1100)}tone(CF,4.5,.14);await wait(1500);busy=false};
+
+/* ===== RESPIRACIÓN ===== */
+let bOn=false,bTm=null,bD=[];
+const BP=[[4,1,.0],[4,1,0],[6,.55,0]];
+function bPhase(i){if(!bOn)return;const [d,s]=BP[i],c=$('#bc');c.style.transitionDuration=d+'s';c.style.transform='scale('+s+')';$('#bl').textContent=t('ph')[i];
+ if(bD.length){const g=bD[0],n=A.x.currentTime;g.gain.cancelScheduledValues(n);g.gain.setTargetAtTime(i===0?.07:i===2?.02:g.gain.value,n,.6)}
+ bTm=setTimeout(()=>bPhase((i+1)%3),d*1e3)}
+function bStart(){try{gStop();const x=actx(),g=x.createGain();g.gain.value=0;g.connect(x.destination);bD=[g,osc(110,0,g),osc(165,0,g)]}catch(e){}bOn=true;$('#bb').textContent=t('brX');bPhase(0);mini()}
+function bStop(){bOn=false;clearTimeout(bTm);$('#bl').textContent='';$('#bc').style.transform='scale(.55)';
+ if(bD.length){const [g,...o]=bD;bD=[];g.gain.setTargetAtTime(0,A.x.currentTime,.3);setTimeout(()=>o.forEach(s=>{try{s.stop()}catch(e){}}),1500)}$('#bb').textContent=t('brS');mini()}
+$('#bb').onclick=()=>bOn?bStop():bStart();
+
+/* ===== ARTÍCULOS, FAQ ===== */
+function mkArt(i){const a=document.createElement('article');a.className='card art rv tilt';a.innerHTML='<button class="t" aria-expanded="false" aria-controls="p'+i+'"><h3></h3><span class="g rt"></span><br><span class="mr" style="border-bottom:1px solid var(--ln)"></span></button><div class="pn" id="p'+i+'" role="region"><div><p></p></div></div>';
+ const b=$('button',a);b.onclick=()=>{const o=a.classList.toggle('open');b.setAttribute('aria-expanded',o);$('.mr',a).textContent=o?t('less'):t('more')};return a}
+function adEl(id,sz){const d=document.createElement('div');d.className='ad ad-'+sz;d.dataset.slot=id;return d}
+for(let i=0;i<6;i++){$('#arts').appendChild(mkArt(i));if(i===1)$('#arts').appendChild(adEl('A3','300x250'));if(i===3)$('#arts').appendChild(adEl('A4','300x250'))}
+for(let i=0;i<4;i++){const a=document.createElement('div');a.className='card rv';a.style.marginBottom='10px';a.innerHTML='<button class="t" aria-expanded="false" style="all:unset;display:block;width:100%;min-height:44px;cursor:pointer;box-sizing:border-box"><h3></h3></button><div class="pn art" style="display:grid"><div></div></div>';
+ const art=a,b=$('button',a),pn=$('.pn',a);pn.style.cssText='display:grid;grid-template-rows:0fr;transition:grid-template-rows .5s cubic-bezier(.2,.7,.2,1)';pn.firstChild.style.overflow='hidden';pn.firstChild.innerHTML='<p style="padding-top:10px"></p>';
+ b.onclick=()=>{const o=b.getAttribute('aria-expanded')!=='true';b.setAttribute('aria-expanded',o);pn.style.gridTemplateRows=o?'1fr':'0fr'};$('#fl').appendChild(a)}
+
+/* ===== QUIZ ===== */
+let qi=0,qs=[];
+function quiz(){const b=$('#qb');b.innerHTML='';if(qi>=4){const w=[0,0,0,0];qs.forEach(v=>w[v]++);const r=w.indexOf(Math.max(...w));b.innerHTML='<p>'+t('qzR')+'</p><h3 style="font-size:34px">'+t('pr')[r]+'</h3>';
+  const o=document.createElement('button');o.className='btn';o.textContent=t('qzO');o.style.margin='14px 8px 0 0';o.onclick=()=>{setPreset(r);$('#gen').scrollIntoView()};
+  const a=document.createElement('button');a.className='btn';a.textContent=t('qzA');a.onclick=()=>{qi=0;qs=[];quiz()};b.append(o,a);return}
+ const q=t('qz')[qi];b.innerHTML='<p>'+(qi+1)+'/4</p><h3 style="margin-bottom:10px">'+q[0]+'</h3>';q[1].forEach(o=>{const x=document.createElement('button');x.className='btn';x.style.cssText='display:block;width:100%;margin-bottom:8px;text-align:left';x.textContent=o[0];x.onclick=()=>{qs.push(+o[1]);qi++;quiz()};b.appendChild(x)})}
+
+/* ===== RACHA ===== */
+let S=store.get('st',{sec:0,last:'',streak:0,b:[]});
+const dk=d=>d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate();
+const BR=[s=>s.sec>=300,s=>s.sec>=1800,s=>s.sec>=3600,s=>s.streak>=3,s=>s.streak>=7];
+function badges(){const f=$('#bdg');f.innerHTML='';t('b').forEach((n,i)=>{const s=document.createElement('span');const ok=BR[i](S);s.textContent=(ok?'✦ ':'· ')+n;if(ok)s.className='ok'+(S.b.includes(i)?'':' pop');f.appendChild(s);if(ok&&!S.b.includes(i)){S.b.push(i);setTimeout(()=>s.classList.remove('pop'),50);store.set('st',S)}});
+ $('#km').textContent=Math.floor(S.sec/60);$('#kd').textContent=S.streak}
+setInterval(()=>{if(!(A.on||bOn))return;const td=dk(new Date());if(S.last!==td){S.streak=S.last===dk(new Date(Date.now()-864e5))?S.streak+1:1;S.last=td}S.sec++;if(S.sec%10===0){store.set('st',S);badges()}},1000);
+addEventListener('pagehide',()=>store.set('st',S));
+
+/* ===== i18n ===== */
+let tw;function type(){clearInterval(tw);const h=$('#ttl'),s=t('title');h.setAttribute('aria-label',s);if(RM){h.textContent=s;return}let i=0;h.textContent='';tw=setInterval(()=>{h.textContent=s.slice(0,++i);if(i>=s.length)clearInterval(tw)},45)}
+function apply(){const L=T[lang];document.documentElement.lang=lang;$('#lg').textContent=lang==='es'?'EN':'ES';
+ $$('[data-i]').forEach(e=>{if(L[e.dataset.i]!==undefined)e.textContent=L[e.dataset.i]});$$('.ad-l').forEach(e=>e.textContent=L.ad);
+ $$('#sm h3').forEach((h,i)=>h.textContent=L.sd[i]);$$('#sm button').forEach(b=>b.textContent=L.hear);
+ $$('.node span').forEach((s,j)=>{const i=6-j;s.textContent=L.c[i][0]+' · '+CF[i]+' Hz'});
+ $$('#arts .art').forEach((a,i)=>{$('h3',a).textContent=L.a[i][0];$('p',a).textContent=L.a[i][1];$('.rt',a).textContent='≈ '+Math.max(1,Math.ceil(L.a[i][1].split(' ').length/180))+' '+L.min;$('.mr',a).textContent=a.classList.contains('open')?L.less:L.more});
+ $$('#fl .card').forEach((a,i)=>{$('h3',a).textContent=L.f[i][0];$('p',a).textContent=L.f[i][1]});
+ buildGen();fx();tms();freq();upd();votes();pick(cur,false);quiz();badges();$('#bb').textContent=bOn?L.brX:L.brS;$('#cta').textContent=L.cta;type()}
+$('#lg').onclick=()=>{lang=lang==='es'?'en':'es';store.set('lang',lang);apply()};
+
+/* ===== UI ===== */
+const toGen=()=>$('#gen').scrollIntoView();$('#hs').onclick=toGen;$('#cta').onclick=toGen;
+$('#gate').onclick=()=>{try{actx()}catch(e){}toGen()};
+$('#sx').onclick=()=>document.body.classList.remove('st');
+document.body.classList.add('st');
+/* progreso */
+let tk=0;addEventListener('scroll',()=>{if(tk)return;tk=requestAnimationFrame(()=>{tk=0;const h=document.documentElement;$('#prog').style.transform='scaleX('+(h.scrollTop/(h.scrollHeight-h.clientHeight||1))+')'})},{passive:true});
+/* reveal */
+const rio=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');rio.unobserve(e.target)}}),{threshold:.12});
+$$('.rv').forEach((e,i)=>{e.style.transitionDelay=(i%4)*80+'ms';rio.observe(e)});
+$$('h2').forEach(h=>rio.observe(h));
+/* contadores */
+const cio=new IntersectionObserver(es=>es.forEach(e=>{if(!e.isIntersecting)return;cio.unobserve(e.target);const to=+e.target.dataset.to;if(RM){e.target.textContent=to;return}let n=0;const iv=setInterval(()=>{e.target.textContent=++n;if(n>=to)clearInterval(iv)},150)}));
+$$('.cnt').forEach(e=>cio.observe(e));
+/* anuncios lazy */
+const aio=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){aio.unobserve(e.target);mountAd(e.target)}}),{rootMargin:'400px'});
+$$('.ad').forEach(el=>{const s=el.classList.contains('ad-300x250')?'300×250':'320×50';el.innerHTML='<span class="ad-l"></span><div class="ad-b">'+s+' · '+el.dataset.slot+'</div>';aio.observe(el)});
+/* efectos solo desktop */
+document.addEventListener('click',e=>{const b=e.target.closest('.btn');if(!b||RM)return;const r=b.getBoundingClientRect(),s=document.createElement('span');s.className='rip';s.style.left=(e.clientX-r.left)+'px';s.style.top=(e.clientY-r.top)+'px';b.appendChild(s);setTimeout(()=>s.remove(),650)});
+if(FINE&&!RM){const h=document.createElement('div');h.className='halo';document.body.appendChild(h);
+ addEventListener('mousemove',e=>{h.style.transform='translate('+e.clientX+'px,'+e.clientY+'px)'});
+ document.addEventListener('mousemove',e=>{const b=e.target.closest&&e.target.closest('.btn');$$('.btn').forEach(x=>{if(x!==b)x.style.transform=''});if(b){const r=b.getBoundingClientRect();b.style.transform='translate('+(e.clientX-r.left-r.width/2)*.12+'px,'+(e.clientY-r.top-r.height/2)*.18+'px)'}});
+ document.addEventListener('mousemove',e=>{const c=e.target.closest&&e.target.closest('.tilt');$$('.tilt').forEach(x=>{if(x!==c)x.style.transform=''});if(c){const r=c.getBoundingClientRect(),px=(e.clientX-r.left)/r.width-.5,py=(e.clientY-r.top)/r.height-.5;c.style.transform='perspective(800px) rotateX('+(-py*5)+'deg) rotateY('+(px*5)+'deg)'}})}
+/* hero */
+new Cym($('#hc'),{m:5,k:6,n:1500,bf:.12,amp:.03});
+apply();requestAnimationFrame(loop);
+})();
+</script></body></html>

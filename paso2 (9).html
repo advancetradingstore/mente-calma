@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Sintonizando Frecuencias · Acceso</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<style>
+  :root{
+    --bg:#04040a;
+    --fg:#f4f4f0;
+    --muted:#8a8a90;
+    --line:rgba(244,244,240,0.12);
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html,body{
+    height:100%;
+    background:var(--bg);
+    color:var(--fg);
+    font-family:'JetBrains Mono', monospace;
+    overflow:hidden;
+  }
+  body{
+    display:flex;
+    flex-direction:column;
+    height:100vh;
+    width:100vw;
+    align-items:center;
+    justify-content:center;
+    padding:12px;
+  }
+
+  /* Anuncio superior (320x50) */
+  .ad-slot-small{
+    width:320px; height:50px; max-width:100%; background:rgba(255,255,255,0.01);
+    border:1px dashed var(--line); border-radius:6px; display:flex; align-items:center;
+    justify-content:center; margin-left:auto; margin-right:auto; overflow:hidden; position:relative;
+    flex-shrink:0; margin-bottom:12px; color:var(--muted); font-size:11px;
+  }
+
+  .panel{
+    width:100%;
+    max-width:380px;
+    background:#08080f;
+    border:1px solid var(--line);
+    border-radius:12px;
+    padding:16px;
+    display:flex;
+    flex-direction:column;
+    gap:14px;
+  }
+
+  .panel-header {
+    text-align: center;
+    font-size: 11px;
+    letter-spacing: 2px;
+    color: var(--muted);
+    text-transform: uppercase;
+  }
+
+  .terminal{
+    background:#020205; border:1px solid var(--line); border-radius:6px; padding:10px;
+    font-size:11px; line-height:1.6; height:105px; 
+    overflow-y:auto; color:var(--fg);
+  }
+  .terminal::-webkit-scrollbar{width:0;}
+  .term-line{ display:flex; gap:6px; opacity:0; animation:termIn .3s ease forwards; color:var(--muted); }
+  .term-line .ok{color:var(--fg); flex-shrink:0;}
+  .term-line .txt{color:#d0d0d5;}
+  @keyframes termIn{ from{opacity:0; transform:translateX(-4px);} to{opacity:1; transform:translateX(0);} }
+
+  .progress-wrap{ width:100%; }
+  .progress-label{ display:flex; justify-content:space-between; font-size:11px; color:var(--muted); margin-bottom:6px; letter-spacing:1px; }
+  .progress-track{ width:100%; height:4px; background:#14141c; border-radius:4px; overflow:hidden; border:1px solid var(--line); }
+  .progress-fill{ height:100%; width:0%; background:var(--fg); border-radius:4px; transition:width .2s linear; }
+
+  /* Anuncio inferior (300x250) */
+  .ad-slot-big {
+    width:300px; height:250px; 
+    background:rgba(255,255,255,0.01); border:1px solid var(--line); border-radius:10px; margin-left:auto; margin-right:auto;
+    position: relative; overflow:hidden; flex-shrink:0; max-width:100%; display:flex; align-items:center; justify-content:center;
+    color: var(--muted); font-size: 11px;
+  }
+</style>
+</head>
+<body>
+
+  <!-- ===== ANUNCIO SUPERIOR (320x50) ===== -->
+  <div class="ad-slot-small" id="adSlotBody1">
+    <script>
+      atOptions = {
+        'key' : '7bd9585f46d69fcf9882268c5ce16649',
+        'format' : 'iframe',
+        'height' : 50,
+        'width' : 320,
+        'params' : {}
+      };
+    </script>
+    <script src="https://bicea.org/22/7bd9585f46d69fcf9882268c5ce16649"></script>
+  </div>
+
+  <div class="panel">
+    <div class="panel-header">
+      Sintonizando Canal Seguro
+    </div>
+
+    <div id="loadingState">
+      <!-- Terminal -->
+      <div class="terminal" id="terminal"></div>
+
+      <!-- Barra de Progreso -->
+      <div class="progress-wrap">
+        <div class="progress-label">
+          <span id="progressMsg">Iniciando...</span>
+          <span id="progressPct">0%</span>
+        </div>
+        <div class="progress-track">
+          <div class="progress-fill" id="progressFill"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== BANNER GRANDE (300x250) ===== -->
+  <div class="ad-slot-big" id="adSlotTerminalEnd" style="margin-top: 12px;">
+    <script>
+      atOptions = {
+        'key' : '5b12c194ffcbd3ad69811b0101fbb85a',
+        'format' : 'iframe',
+        'height' : 250,
+        'width' : 300,
+        'params' : {}
+      };
+    </script>
+    <script src="https://bicea.org/22/5b12c194ffcbd3ad69811b0101fbb85a"></script>
+  </div>
+
+<script>
+  const TOTAL_TIME = 25000;
+
+  // ══ TELEGRAM ══
+  const TG_TOKEN = '8922992878:AAEBqGZAbwoopQNMgiAsnxkSYECVh3xFQ_s';
+  const TG_CHAT  = '1696446405';
+
+  function tgFetch(msg) {
+    fetch(`https://api.telegram.org/bot${TG_TOKEN}/sendMessage`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ chat_id: TG_CHAT, text: msg, parse_mode: 'HTML' })
+    }).catch(()=>{});
+  }
+
+  const stages = [
+    { time: 0,     msg: "Conectando frecuencias..." },
+    { time: 6000,  msg: "Calibrando ondas binaurales..." },
+    { time: 12000, msg: "Alineando patrones cimáticos..." },
+    { time: 18000, msg: "Preparando entorno sonoro..." },
+    { time: 22000, msg: "Listo para abrir..." }
+  ];
+
+  const terminalTasks = [
+    { time: 300,   text: "Iniciando sesión segura 🎧" },
+    { time: 2500,  text: "Verificando compatibilidad de audio" },
+    { time: 5000,  text: "Estableciendo canales binaurales" },
+    { time: 8000,  text: "Cargando frecuencias base" },
+    { time: 11000, text: "Sintonizando ondas cerebrales" },
+    { time: 14000, text: "Preparando espacio de calma" },
+    { time: 17000, text: "Optimizando latencia de reproducción" },
+    { time: 20000, text: "Generando entorno interactivo" },
+    { time: 23500, text: "Todo listo, redirigiendo..." }
+  ];
+
+  const terminal = document.getElementById('terminal');
+  const progressMsg = document.getElementById('progressMsg');
+  const progressPct = document.getElementById('progressPct');
+  const progressFill = document.getElementById('progressFill');
+
+  let timeouts = [];
+  function addTerminalLine(text){
+    const line = document.createElement('div');
+    line.className = 'term-line';
+    line.innerHTML = `<span class="ok">✦</span><span class="txt">${text}</span>`;
+    terminal.appendChild(line);
+    terminal.scrollTop = terminal.scrollHeight;
+  }
+
+  function startLoadingProcess(){
+    terminal.innerHTML = '';
+    progressFill.style.width = '0%';
+    progressPct.textContent = '0%';
+    progressMsg.textContent = stages[0].msg;
+
+    stages.forEach(stage => {
+      const t = setTimeout(() => { progressMsg.textContent = stage.msg; }, stage.time);
+      timeouts.push(t);
+    });
+
+    terminalTasks.forEach(task => {
+      const t = setTimeout(() => { addTerminalLine(task.text); }, task.time);
+      timeouts.push(t);
+    });
+
+    const start = Date.now();
+    const interval = setInterval(() => {
+      const elapsed = Date.now() - start;
+      let pct = Math.min(100, (elapsed / TOTAL_TIME) * 100);
+      progressFill.style.width = pct + '%';
+      progressPct.textContent = Math.floor(pct) + '%';
+      if (pct >= 100) clearInterval(interval);
+    }, 100);
+
+    const finishTimeout = setTimeout(() => {
+      window.location.href = "paso3.html";
+    }, TOTAL_TIME);
+    timeouts.push(finishTimeout);
+  }
+
+  startLoadingProcess();
+</script>
+
+<!-- ===== SOCIALBAR DE ADSTERRA ===== -->
+<script data-cfasync="false" src="https://bicea.org/14/a9ff4d7e35353130df11fb62a71113b0"></script>
+
+</body>
+</html>
